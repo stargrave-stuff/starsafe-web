@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StarSafe | Blacklist Management</title>
+    <link rel="stylesheet" href="/css/root.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="dashboard-body">
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fa-solid fa-shield-halved"></i> StarSafe
+            </div>
+
+            <nav class="nav-menu">
+                <a href="/admin" class="nav-item">
+                    <i class="fa-solid fa-hammer"></i> Admin Home
+                </a>
+                <a href="/dashboard" class="nav-item">
+                    <i class="fa-solid fa-house"></i> User View
+                </a>
+                <a href="/blacklist-manage" class="nav-item active">
+                    <i class="fa-solid fa-user-slash"></i> Blacklist
+                </a>
+                <a href="/servers" class="nav-item">
+                    <i class="fa-solid fa-gear"></i> Settings
+                </a>
+            </nav>
+
+            <div class="user-footer">
+                <% if (user && user.avatar) { %>
+                    <img src="https://cdn.discordapp.com/avatars/<%= user.id %>/<%= user.avatar %>.png" class="user-avatar-img">
+                <% } else { %>
+                    <div class="user-avatar-container">
+                        <i class="fa-brands fa-discord"></i>
+                    </div>
+                <% } %>
+                <div class="user-details">
+                    <span class="username"><%= user.username %></span>
+                    <a href="/logout" class="logout-link">Sign Out</a>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="server-header">
+                <h1>Global Blacklist</h1>
+                <p class="subtitle">IDs added here are blocked across all protected servers.</p>
+            </header>
+
+            <section class="settings-card" style="margin-bottom: 2rem;">
+                <form action="/api/blacklist/add" method="POST" class="add-entry-grid">
+                    <div class="input-group" style="margin-bottom: 0;">
+                        <label>Discord ID</label>
+                        <input type="text" name="discordId" placeholder="User ID" class="styled-input" required>
+                    </div>
+                    <div class="input-group" style="margin-bottom: 0;">
+                        <label>Reason</label>
+                        <input type="text" name="reason" placeholder="Reason" class="styled-input" required>
+                    </div>
+                    <div class="input-group" style="margin-bottom: 0;">
+                        <label>Reports</label>
+                        <input type="number" name="reports" value="1" class="styled-input">
+                    </div>
+                    <div class="input-group" style="margin-bottom: 0;">
+                        <label>Evidence</label>
+                        <input type="url" name="evidence" placeholder="Link" class="styled-input">
+                    </div>
+                    <button type="submit" class="save-btn" style="height: 42px; background-color: var(--discord-blurple);">Add User</button>
+                </form>
+            </section>
+
+            <section class="settings-card">
+                <div style="overflow-x: auto;">
+                    <table class="blacklist-table">
+                        <thead>
+                            <tr>
+                                <th>User ID</th>
+                                <th>Reason</th>
+                                <th>Reports</th>
+                                <th>Evidence</th>
+                                <th>Date</th>
+                                <th style="text-align: right;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (blacklist && blacklist.length > 0) { %>
+                                <% blacklist.forEach(entry => { %>
+                                    <tr>
+                                        <td><code><%= entry.discordId %></code></td>
+                                        <td><%= entry.reason %></td>
+                                        <td><%= entry.reports || 1 %></td>
+                                        <td>
+                                            <% if (entry.evidence) { %>
+                                                <a href="<%= entry.evidence %>" target="_blank" style="color: #00a8fc; text-decoration: none;">View</a>
+                                            <% } else { %>
+                                                None
+                                            <% } %>
+                                        </td>
+                                        <td><%= new Date(entry.dateAdded).toLocaleDateString() %></td>
+                                        <td style="text-align: right;">
+                                            <form action="/api/blacklist/remove/<%= entry.discordId %>" method="POST">
+                                                <button type="submit" style="color: #ff4747; background:none; border:none; cursor:pointer; font-weight:600;">Remove</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                <% }); %>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

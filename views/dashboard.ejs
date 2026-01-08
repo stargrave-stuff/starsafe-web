@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StarSafe | Dashboard</title>
+    <link rel="stylesheet" href="/css/root.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <div class="dashboard-container">
+<aside class="sidebar">
+    <div class="brand-section">
+        <div class="brand-logo"><i class="fas fa-shield-halved"></i></div>
+        <span class="brand-name">StarSafe</span>
+    </div>
+
+    <nav class="nav-menu">
+        <a href="/dashboard" class="nav-item active"><i class="fas fa-house"></i> Overview</a>
+        <a href="/servers" class="nav-item"><i class="fas fa-server"></i> Servers</a>
+        <a href="/blacklist" class="nav-item"><i class="fas fa-user-slash"></i> Blacklists</a>
+    </nav>
+
+    <div class="user-footer">
+        <% if (user.avatar) { %>
+            <img src="https://cdn.discordapp.com/avatars/<%= user.id %>/<%= user.avatar %>.png" class="user-avatar" alt="User Avatar">
+        <% } else { %>
+            <img src="https://cdn.discordapp.com/embed/avatars/0.png" class="user-avatar" alt="Default Avatar">
+        <% } %>
+        <div class="user-info">
+            <span class="username"><%= user.username %></span>
+            <a href="/logout" class="logout-link">Sign Out</a>
+        </div>
+    </div>
+</aside>
+
+        <main class="main-content">
+            <header class="header-section">
+                <h1>Welcome, <%= user.username %></h1>
+                <p>Status: <span class="status-indicator">● Active</span></p>
+            </header>
+
+            <section class="stats-grid">
+                <div class="stat-card">
+                    <i class="fas fa-server stat-icon"></i>
+                    <span class="stat-label">Your Servers</span>
+                    <span class="stat-value"><%= stats.serverCount %></span>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-users-slash stat-icon"></i>
+                    <span class="stat-label">Global Blacklist</span>
+                    <span class="stat-value"><%= stats.blacklistCount %></span>
+                </div>
+            </section>
+            
+            </main>
+    </div>
+
+</body>
+</html>

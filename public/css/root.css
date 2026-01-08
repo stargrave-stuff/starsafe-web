@@ -1,0 +1,29 @@
+:root {
+    /* Colors */
+    --bg-dark: #121212;
+    --card-bg: #1e1e1e;
+    --sidebar-bg: #181818;
+    --accent-color: #5865F2; /* Discord Blurple */
+    --accent-hover: #4752c4;
+    
+    /* Text */
+    --text-main: #ffffff;
+    --text-muted: #a0a0a0;
+    --border-color: #2d2d2d;
+    
+    /* Spacing & Sizes */
+    --sidebar-width: 260px;
+    --transition-speed: 0.3s;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+}

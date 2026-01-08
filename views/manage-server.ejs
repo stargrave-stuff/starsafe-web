@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage <%= guild.name %> | StarSafe</title>
+    <link rel="stylesheet" href="/css/root.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="dashboard-body">
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fa-solid fa-shield-halved"></i> StarSafe
+            </div>
+
+            <nav class="nav-menu">
+                <a href="/dashboard" class="nav-item">
+                    <i class="fa-solid fa-house"></i> Overview
+                </a>
+                <a href="/servers" class="nav-item active">
+                    <i class="fa-solid fa-server"></i> Servers
+                </a>
+                <a href="/blacklist" class="nav-item">
+                    <i class="fa-solid fa-user-slash"></i> Blacklists
+                </a>
+            </nav>
+
+            <div class="user-footer">
+                <% if (user && user.avatar) { %>
+                    <img src="https://cdn.discordapp.com/avatars/<%= user.id %>/<%= user.avatar %>.png" class="user-avatar">
+                <% } else { %>
+                    <div class="user-avatar default-avatar"><i class="fa-brands fa-discord"></i></div>
+                <% } %>
+                <div class="user-info">
+                    <span class="username text-truncate"><%= user.username %></span>
+                    <a href="/logout" class="logout-link">Sign Out</a>
+                </div>
+            </div>
+        </aside>
+
+<main class="main-content">
+    <header class="server-header">
+        <div class="server-icon-container">
+            <% if (guild.icon) { %>
+                <img src="https://cdn.discordapp.com/icons/<%= guild.id %>/<%= guild.icon %>.png" class="server-lg-icon">
+            <% } else { %>
+                <div class="server-lg-icon-placeholder"><%= guild.name.charAt(0) %></div>
+            <% } %>
+        </div>
+        <div class="header-text">
+            <h1><%= guild.name %></h1>
+            <p class="subtitle">Configure bot behavior and logging.</p>
+        </div>
+    </header>
+
+    <div class="settings-grid">
+        <section class="settings-card">
+            <div class="card-header">
+                <h3>Bot Configuration</h3>
+                <p>Set the operational parameters for StarSafe.</p>
+            </div>
+            
+            <form action="/api/save-settings/<%= guild.id %>" method="POST" class="settings-form">
+                <div class="input-group">
+    <label for="cooldown">Kick Cooldown (Minutes)</label>
+    <input type="number" id="cooldown" name="cooldown" 
+           value="<%= settings.cooldown %>" min="0" max="120" class="styled-input">
+    <p class="input-hint">Users must wait this many minutes between specific commands.</p>
+</div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="logChannelId">Log Channel ID</label>
+                    <input type="text" id="logChannelId" name="logChannelId" 
+                           value="<%= settings.logChannelId %>" placeholder="e.g. 123456789012345678" class="styled-input">
+                </div>
+
+                <button type="submit" class="save-btn">Save Configuration</button>
+            </form>
+        </section>
+
+        <aside class="info-card">
+            <h3>Server Info</h3>
+            <div class="info-list">
+                <div class="info-item">
+                    <span class="info-label">Status</span>
+                    <span class="status-online">StarSafe Protected</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Server ID</span>
+                    <span class="info-value"><%= guild.id %></span>
+                </div>
+            </div>
+        </aside>
+    </div>
+</main>
+</div>
+<div class="toast-container">
+    <div id="success-toast" class="toast">
+        <i class="fa-solid fa-circle-check"></i>
+        <span>Settings saved successfully!</span>
+    </div>
+</div>
+
+<script>
+    // Check if the URL has ?success=true
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('success') === 'true') {
+        const toast = document.getElementById('success-toast');
+        
+        // Show the toast
+        setTimeout(() => {
+            toast.classList.add('show');
+        }, 100);
+
+        // Hide it after 3 seconds
+        setTimeout(() => {
+            toast.classList.remove('show');
+            // Clean up the URL so it doesn't pop up again on refresh
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }, 3000);
+    }
+</script>
+</body>
+</html>

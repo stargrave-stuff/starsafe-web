@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StarSafe | My Servers</title>
+    <link rel="stylesheet" href="/css/root.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="brand-section">
+                <div class="brand-logo"><i class="fas fa-shield-halved"></i></div>
+                <span class="brand-name">StarSafe</span>
+            </div>
+
+            <nav class="nav-menu">
+                <a href="/dashboard" class="nav-item"><i class="fas fa-house"></i> Overview</a>
+                <a href="/servers" class="nav-item active"><i class="fas fa-server"></i> Servers</a>
+                <a href="/blacklist" class="nav-item"><i class="fas fa-user-slash"></i> Blacklists</a>
+            </nav>
+
+            <div class="user-footer">
+                <img src="<%= user.avatar ? 'https://cdn.discordapp.com/avatars/' + user.id + '/' + user.avatar + '.png' : 'https://cdn.discordapp.com/embed/avatars/0.png' %>" class="user-avatar" alt="User">
+                <div class="user-info">
+                    <span class="username text-truncate"><%= user.username %></span>
+                    <a href="/logout" class="logout-link">Sign Out</a>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="header-section">
+                <h1>My Servers</h1>
+                <p>Manage StarSafe protection across your guilds.</p>
+            </header>
+
+<section class="servers-grid">
+    <% guilds.forEach(guild => { %>
+        <div class="server-card">
+            <div class="server-info-wrapper">
+                <% if (guild.icon) { %>
+                    <img src="https://cdn.discordapp.com/icons/<%= guild.id %>/<%= guild.icon %>.png" class="server-icon" alt="">
+                <% } else { %>
+                    <div class="server-icon-placeholder"><%= guild.name.charAt(0) %></div>
+                <% } %>
+                <div class="server-text">
+                    <h3 class="server-name"><%= guild.name %></h3>
+                </div>
+            </div>
+
+            <div class="server-actions">
+                <% if (guild.hasBot) { %>
+                    <a href="/manage/<%= guild.id %>" class="btn-action btn-manage">
+                        <i class="fas fa-sliders"></i> Manage
+                    </a>
+                <% } else { %>
+                    <a href="<%= inviteUrl %>&guild_id=<%= guild.id %>" target="_blank" class="btn-action btn-invite">
+                        <i class="fas fa-plus"></i> Invite
+                    </a>
+                <% } %>
+            </div>
+        </div>
+    <% }) %>
+</section>
+        </main>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,13 @@
+# Node Modules directories
+node_modules/
+
+# Dotenv files
+*.env
+.env
+.env.*
+
+# Package lock
+package-lock.json 
+
+# VSC Configurations
+.vscode/

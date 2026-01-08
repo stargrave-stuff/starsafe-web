@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StarSafe | Admin Center</title>
+    <link rel="stylesheet" href="/css/root.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <div class="dashboard-container">
+<aside class="sidebar">
+    <div class="brand-section">
+        <div class="brand-logo"><i class="fas fa-shield-halved"></i></div>
+        <span class="brand-name">StarSafe</span>
+    </div>
+
+    <nav class="nav-menu">
+        <a href="/admin" class="nav-item active"><i class="fas fa-hammer"></i> Admin Home</a>
+        <a href="/dashboard" class="nav-item"><i class="fas fa-house"></i> User View</a>
+        <a href="/blacklist-manage" class="nav-item"><i class="fas fa-user-slash"></i> Blacklist</a>
+        <a href="/settings" class="nav-item"><i class="fas fa-gears"></i> Settings</a>
+    </nav>
+
+    <div class="user-footer">
+        <% if (user.avatar) { %>
+            <img src="https://cdn.discordapp.com/avatars/<%= user.id %>/<%= user.avatar %>.png" class="user-avatar" alt="Admin">
+        <% } else { %>
+            <img src="https://cdn.discordapp.com/embed/avatars/0.png" class="user-avatar" alt="Admin">
+        <% } %>
+        <div class="user-info">
+            <span class="username"><%= user.username %></span>
+            <a href="/logout" class="logout-link">Sign Out</a>
+        </div>
+    </div>
+</aside>
+
+        <main class="main-content">
+            <header class="header-section">
+                <h1>Admin Command Center</h1>
+                <p>Managing Global Security</p>
+            </header>
+
+            <section class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-label">Total Users Blacklisted</span>
+                    <span class="stat-value"><%= blacklistCount %></span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">Bot Latency</span>
+                    <span class="stat-value"><%= stats ? stats.latency : '-1' %></span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">System Health</span>
+                    <span class="stat-value">Online</span>
+                </div>
+            </section>
+
+            <section class="content-card">
+                <div class="card-header">
+                    <h2>Recent Blacklist Activity</h2>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                <tr style="text-align: left; color: #949ba4; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px;">
+                    <th style="padding: 12px;">Discord ID</th>
+                    <th style="padding: 12px;">Reason</th>
+                    <th style="padding: 12px;">Reports</th>
+                    <th style="padding: 12px;">Evidence</th>
+                    <th style="padding: 12px;">Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if (recentBlacklist && recentBlacklist.length > 0) { %>
+                    <% recentBlacklist.forEach(entry => { %>
+                        <tr style="border-top: 1px solid #1e1f22;">
+                            <td style="padding: 16px 12px;">
+                                <code style="background: rgba(88, 101, 242, 0.1); color: #5865F2; padding: 4px 8px; border-radius: 4px; font-family: monospace;">
+                                    <%= entry.discordId %>
+                                </code>
+                            </td>
+                            <td style="padding: 16px 12px; color: #dbdee1;"><%= entry.reason %></td>
+                            <td style="padding: 16px 12px; color: #dbdee1;"><%= entry.reports || 1 %></td>
+                            <td style="padding: 16px 12px;">
+                                <% if (entry.evidence) { %>
+                                    <a href="<%= entry.evidence %>" target="_blank" style="color: #00a8fc; text-decoration: none;">View</a>
+                                <% } else { %>
+                                    <span style="color: #949ba4;">None</span>
+                                <% } %>
+                            </td>
+                            <td style="padding: 16px 12px; color: #949ba4; font-size: 0.85rem;">
+                                <%= new Date(entry.dateAdded).toLocaleDateString() %>
+                            </td>
+                        </tr>
+                    <% }); %>
+                <% } else { %>
+                    <tr>
+                        <td colspan="5" style="padding: 30px; text-align: center; color: #949ba4;">No recent activity found.</td>
+                    </tr>
+                <% } %>
+            </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+</body>
+</html>

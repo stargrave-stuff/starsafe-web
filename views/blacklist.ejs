@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StarSafe | Global Blacklist</title>
+    <link rel="stylesheet" href="/css/root.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <i class="fa-solid fa-shield-halved"></i> StarSafe
+            </div>
+
+    <nav class="nav-menu">
+        <a href="/dashboard" class="nav-item active"><i class="fas fa-house"></i> Overview</a>
+        <a href="/servers" class="nav-item"><i class="fas fa-server"></i> Servers</a>
+        <a href="/blacklist" class="nav-item"><i class="fas fa-user-slash"></i> Blacklists</a>
+    </nav>
+
+            <div class="user-footer">
+                <% if (user && user.avatar) { %>
+                    <img src="https://cdn.discordapp.com/avatars/<%= user.id %>/<%= user.avatar %>.png" class="avatar-small">
+                <% } else { %>
+                    <div class="avatar-small" style="background:var(--discord-blurple); display:flex; align-items:center; justify-content:center;"><i class="fa-brands fa-discord"></i></div>
+                <% } %>
+                <div class="user-meta">
+                    <span style="font-weight: 600;"><%= user.username %></span>
+                    <a href="/logout" class="logout-link">Sign Out</a>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div style="background: #2b2d31; border-radius: 8px; padding: 24px;">
+                <table class="blacklist-table">
+                    <thead>
+                        <tr>
+                            <th>User ID</th>
+                            <th>Reason</th>
+                            <th>Reports</th>
+                            <th>Evidence</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if (blacklist.length > 0) { %>
+                            <% blacklist.forEach(user => { %>
+                                <tr>
+                                    <td><code><%= user.discordId %></code></td>
+                                    <td><%= user.reason %></td>
+                                    <td><%= user.reports || 1 %></td>
+                                    <td>
+                                        <% if (user.evidence) { %>
+                                           <a href="<%= user.evidence %>" target="_blank" style="color: #00a8fc; text-decoration: none;">View</a>
+                                        <% } else { %>
+                                            <span style="color:var(--text-muted)">None</span>
+                                        <% } %>
+                                    </td>
+                                    <td style="color: var(--text-muted); font-size: 0.85rem;">
+                                        <%= new Date(user.dateAdded).toLocaleDateString() %>
+                                    </td>
+                                </tr>
+                            <% }); %>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
