@@ -74,6 +74,80 @@ function checkAdmin(req, res, next) {
 }
 
 // ====================================================
+// WEBHOOK UTILITIES
+// ====================================================
+//async function sendWebhookAlert(userId, reason, adminTag) {
+//    try {
+//        // Find all guilds that have a webhook URL configured
+//        const allSettings = await GuildSettings.find({ webhookUrl: { $ne: "" } });
+//
+//        const embed = {
+//            title: "🚫 Global Blacklist Update",
+//            color: 0xff4b4b, 
+//            description: `A new user has been added to the StarSafe Global Blacklist.`,
+//            fields: [
+//                { name: "User ID", value: `\`${userId}\``, inline: true },
+//                { name: "Added By", value: adminTag, inline: true },
+//                { name: "Reason", value: reason }
+//            ],
+//            footer: { text: "StarSafe Global Protection" },
+//            timestamp: new Date()
+//        };
+//
+//        // Send to every configured webhook
+//        for (const setting of allSettings) {
+//            fetch(setting.webhookUrl, {
+//                method: 'POST',
+//                headers: { 'Content-Type': 'application/json' },
+//                body: JSON.stringify({
+//                    username: "StarSafe Alerts",
+//                    embeds: [embed]
+//                })
+//            }).catch(err => console.error(`Webhook failed for guild ${setting.guildId}`));
+//        }
+//    } catch (err) {
+//        console.error("Error in sendWebhookAlert:", err);
+//    }
+//}
+
+// ====================================================
+// GLOBAL WEBHOOK LOGGING (TEMPORARY FUNCTION)
+// ====================================================
+async function sendGlobalWebhook(userId, reason, adminTag) {
+    const webhookUrl = process.env.ADMIN_LOG_WEBHOOK;
+    
+    if (!webhookUrl) {
+        console.warn("⚠️ ADMIN_LOG_WEBHOOK is not defined in .env");
+        return;
+    }
+
+    const embed = {
+        title: "🚨 Global Blacklist Action",
+        color: 0x5865F2, // Blurple
+        fields: [
+            { name: "Target User", value: `\`${userId}\``, inline: true },
+            { name: "Admin", value: adminTag, inline: true },
+            { name: "Reason", value: reason || "No reason provided" }
+        ],
+        footer: { text: "StarSafe Central Intelligence" },
+        timestamp: new Date()
+    };
+
+    try {
+        await fetch(webhookUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                username: "StarSafe System",
+                embeds: [embed]
+            })
+        });
+    } catch (err) {
+        console.error("Failed to send global webhook:", err);
+    }
+}
+
+// ====================================================
 // PAGE ROUTES (RENDERED VIA EJS)
 // ====================================================
 
@@ -247,7 +321,13 @@ app.post('/api/blacklist/add', checkAuth, checkAdmin, async (req, res) => {
             },
             { upsert: true, new: true }
         );
-        // Redirect back to page with success message
+
+        // Trigger the Webhook Alert
+//        await sendWebhookAlert(discordId, reason || "No reason provided", req.session.user.username);
+
+        // Trigger the Global Webhook Log (Temporary)
+        await sendGlobalWebhook(discordId, reason, req.session.user.username);
+
         res.redirect('/blacklist-manage?success=added');
     } catch (error) {
         console.error("Blacklist Add Error:", error);
