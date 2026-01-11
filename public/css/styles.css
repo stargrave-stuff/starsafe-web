@@ -480,137 +480,272 @@ input[type="checkbox"]:checked::before {
 }
 
 /* Table & Layout Styling */
-        .blacklist-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
+.blacklist-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
 
-        .blacklist-table thead th {
-            text-align: left;
-            color: var(--text-muted);
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            padding: 12px 15px;
-            border-bottom: 1px solid var(--border-color);
-        }
+.blacklist-table thead th {
+    text-align: left;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 12px 15px;
+    border-bottom: 1px solid var(--border-color);
+}
 
-        .blacklist-table tbody td {
-            padding: 16px 15px;
-            font-size: 0.95rem;
-            color: var(--text-main);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
+.blacklist-table tbody td {
+    padding: 16px 15px;
+    font-size: 0.95rem;
+    color: var(--text-main);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
 
-        .blacklist-table tbody tr:hover {
-            background-color: rgba(255, 255, 255, 0.02);
-        }
+.blacklist-table tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.02);
+}
 
-        /* Discord ID Styling */
-        code {
-            background: rgba(88, 101, 242, 0.1);
-            color: #5865F2;
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-family: 'Consolas', monospace;
-            font-size: 0.9rem;
-        }
+/* Discord ID Styling */
+code {
+    background: rgba(88, 101, 242, 0.1);
+    color: #5865F2;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-family: 'Consolas', monospace;
+    font-size: 0.9rem;
+}
 
-        /* Action Buttons */
-        .btn-remove {
-            background: none;
-            border: none;
-            color: #ed4245;
-            cursor: pointer;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            transition: 0.2s;
-        }
+/* Action Buttons */
+.btn-remove {
+    background: none;
+    border: none;
+    color: #ed4245;
+    cursor: pointer;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: 0.2s;
+}
 
-        .btn-remove:hover {
-            opacity: 0.8;
-            text-decoration: underline;
-        }
+.btn-remove:hover {
+    opacity: 0.8;
+       text-decoration: underline;
+}
 
-        /* Form Layout */
-        .add-entry-grid {
-            display: grid;
-            grid-template-columns: 1fr 2fr 140px;
-            gap: 15px;
-            margin-top: 15px;
-        }
+/* Form Layout */
+.add-entry-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr 140px;
+    gap: 15px;
+    margin-top: 15px;
+}
 
-        @media (max-width: 768px) {
-            .add-entry-grid {
-                grid-template-columns: 1fr;
-            }
-        }
+@media (max-width: 768px) {
+.add-entry-grid {
+    grid-template-columns: 1fr;
+    }
+}
 
-        /* Layout and Form Styling */
-        .add-entry-grid {
-            display: grid;
-            grid-template-columns: 1.5fr 2fr 1fr 2fr 120px; /* Adjusted for 4 inputs + button */
-            gap: 12px;
-            margin-top: 15px;
-            align-items: end;
-        }
+/* Layout and Form Styling */
+.add-entry-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 2fr 1fr 2fr 120px; /* Adjusted for 4 inputs + button */
+    gap: 12px;
+    margin-top: 15px;
+    align-items: end;
+}
 
-        .blacklist-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
+.blacklist-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
 
-        .blacklist-table thead th {
-            text-align: left;
-            color: var(--text-muted);
-            font-size: 0.7rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            padding: 12px 15px;
-            border-bottom: 1px solid var(--border-color);
-        }
+.blacklist-table thead th {
+    text-align: left;
+    color: var(--text-muted);
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 12px 15px;
+    border-bottom: 1px solid var(--border-color);
+}
 
-        .blacklist-table tbody td {
-            padding: 14px 15px;
-            font-size: 0.9rem;
-            color: var(--text-main);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            vertical-align: middle;
-        }
+.blacklist-table tbody td {
+    padding: 14px 15px;
+    font-size: 0.9rem;
+    color: var(--text-main);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    vertical-align: middle;
+}
 
-        /* Elements */
-        code {
-            background: rgba(88, 101, 242, 0.1);
-            color: #5865F2;
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-family: 'Consolas', monospace;
-        }
+/* Elements */
+code {
+    background: rgba(88, 101, 242, 0.1);
+    color: #5865F2;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-family: 'Consolas', monospace;
+}
 
-        .evidence-link {
-            color: #00a8fc;
-            text-decoration: none;
-            font-weight: 500;
-        }
+.evidence-link {
+    color: #00a8fc;
+    text-decoration: none;
+    font-weight: 500;
+}
 
-        .evidence-link:hover {
-            text-decoration: underline;
-        }
+.evidence-link:hover {
+    text-decoration: underline;
+}
 
-        .report-badge {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 2px 8px;
-            border-radius: 4px;
-            color: var(--text-muted);
-        }
+.report-badge {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 2px 8px;
+    border-radius: 4px;
+    color: var(--text-muted);
+}
 
-        @media (max-width: 1100px) {
-            .add-entry-grid { grid-template-columns: 1fr 1fr; }
-            .save-btn { grid-column: span 2; }
-        }
+@media (max-width: 1100px) {
+    .add-entry-grid { grid-template-columns: 1fr 1fr; }
+    .save-btn { grid-column: span 2; }
+}
+
+/* Container for the whole section */
+.search-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centers items horizontally */
+    justify-content: center;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.search-section h2 {
+    margin-bottom: 25px;
+    font-size: 1.8rem;
+}
+
+/* The Search Bar Wrapper */
+.google-search-wrapper {
+    width: 100%;
+    max-width: 580px; /* Standard Google search width */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+/* The Pill-shaped Input Box */
+.search-bar {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    background: #2b2d31; /* Matching your dark theme */
+    border: 1px solid #3f4147;
+    padding: 12px 20px;
+    border-radius: 24px; /* Makes it a pill shape */
+    transition: box-shadow 0.2s, background-color 0.2s;
+}
+
+.search-bar:hover, .search-bar:focus-within {
+    background-color: #35373c;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.28);
+    border-color: rgba(223,225,229,0);
+}
+
+.search-bar i {
+    color: #949ba4;
+    margin-right: 12px;
+}
+
+.search-bar input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: white;
+    font-size: 1rem;
+}
+
+/* The Search Button Below */
+.google-btn {
+    background-color: #35373c;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    color: #dbdee1;
+    cursor: pointer;
+    font-size: 14px;
+    margin: 11px 4px;
+    padding: 0 16px;
+    line-height: 36px;
+    min-width: 54px;
+    text-align: center;
+    -webkit-user-select: none;
+    user-select: none;
+    transition: border 0.1s, color 0.1s;
+}
+
+.google-btn:hover {
+    border: 1px solid #5865f2; /* Subtle blurple hint on hover */
+    color: white;
+}
+
+/* Modal Background (Overlay) */
+.modal {
+    display: none; 
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85);
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+}
+
+/* Modal Box */
+.modal-content {
+    background-color: #1e1f22;
+    margin: 10% auto;
+    padding: 30px;
+    border: 1px solid #313338;
+    width: 90%;
+    max-width: 500px;
+    border-radius: 12px;
+    position: relative;
+    color: white;
+}
+
+.close-btn {
+    position: absolute;
+    right: 20px;
+    top: 15px;
+    color: #949ba4;
+    font-size: 28px;
+    cursor: pointer;
+}
+
+/* Result Card Styling */
+.result-card {
+    text-align: center;
+}
+
+.result-id-badge {
+    display: inline-block;
+    background: rgba(88, 101, 242, 0.1);
+    color: #5865F2;
+    padding: 8px 15px;
+    border-radius: 8px;
+    font-family: monospace;
+    font-size: 1.1rem;
+    margin: 15px 0;
+}
+
+.status-clean { color: #23a55a; font-weight: bold; }
+.status-blacklisted { color: #f23f43; font-weight: bold; }

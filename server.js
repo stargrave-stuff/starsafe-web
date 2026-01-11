@@ -168,19 +168,6 @@ app.get('/blacklist-manage', checkAuth, checkAdmin, async (req, res) => {
     }
 });
 
-app.get('/blacklist', checkAuth, async (req, res) => {
-    try {
-        const entries = await Blacklist.find().sort({ dateAdded: -1 });
-        res.render('blacklist', {
-            user: req.session.user,
-            blacklist: entries
-        });
-    } catch (error) {
-        console.error("Blacklist View Error:", error);
-        res.status(500).send("Error loading blacklist");
-    }
-});
-
 // ====================================================
 // AUTH & API ROUTES
 // ====================================================
@@ -315,36 +302,33 @@ app.post('/api/bot/update-stats', async (req, res) => {
 app.get('/manage/:guildId', async (req, res) => {
     const { guildId } = req.params;
 
-    // 1. Session Check: Are they logged in?
-    if (!req.session.user) {
-        console.log(`[AUTH FAIL] User tried to manage ${guildId} but session is empty.`);
+    // 1. Session & Data Checks
+    if (!req.session.user || !req.session.guilds) {
         return res.redirect('/auth/discord'); 
     }
 
-    // 2. Data Check: Do we have their server list?
-    // If not, we force a silent re-sync instead of just failing
-    if (!req.session.guilds) {
-        console.log(`[DATA FAIL] User logged in, but server list missing. Redirecting to auth to fetch it.`);
-        return res.redirect('/auth/discord');
-    }
-
     try {
-        // 3. Find the specific server in THEIR list
+        // 2. Find the server in their list
         const userGuild = req.session.guilds.find(g => g.id === guildId);
         
-        // 4. Check if Bot is in the server (Database Check)
+        // 3. Bitwise Permission Check (Administrator = 0x8)
+        const ADMIN_PERMISSION = 0x8;
+        const isUserAdmin = userGuild && (parseInt(userGuild.permissions) & ADMIN_PERMISSION) === ADMIN_PERMISSION;
+
+        // 4. Check if Bot is in the server
         const stats = await BotStats.findOne({ botId: "StarSafeBot" });
         const isBotPresent = stats && stats.guildIds.includes(guildId);
 
-        // Logic: You must own the server AND the bot must be there
-        if (!userGuild) {
-            return res.status(403).send("You do not have permission to manage this server.");
+        // --- ENHANCED LOGIC ---
+        // If they aren't in the server OR don't have Admin permissions
+        if (!userGuild || !isUserAdmin) {
+            return res.status(403).send("Unauthorized: You must have Administrator permissions to manage this server.");
         }
+        
         if (!isBotPresent) {
             return res.status(404).send("StarSafe is not in this server. Please invite it first.");
         }
 
-        // 5. Render the page
         res.render('manage-server', {
             guild: userGuild,
             user: req.session.user
@@ -360,11 +344,19 @@ app.post('/api/save-settings/:guildId', checkAuth, async (req, res) => {
     const { guildId } = req.params;
     const { cooldown, logChannelId } = req.body;
 
+    // SECURITY: Re-verify Admin permissions before saving
+    const userGuild = req.session.guilds.find(g => g.id === guildId);
+    const ADMIN_PERMISSION = 0x8;
+    const isUserAdmin = userGuild && (parseInt(userGuild.permissions) & ADMIN_PERMISSION) === ADMIN_PERMISSION;
+
+    if (!isUserAdmin) {
+        return res.status(403).send("You do not have permission to modify these settings.");
+    }
+
     try {
         await GuildSettings.findOneAndUpdate(
             { guildId },
             { 
-                // We store the number of minutes directly
                 cooldown: parseInt(cooldown) || 0, 
                 logChannelId: logChannelId.trim(), 
                 lastUpdated: Date.now() 
@@ -375,6 +367,15 @@ app.post('/api/save-settings/:guildId', checkAuth, async (req, res) => {
     } catch (err) {
         console.error("Save Error:", err);
         res.status(500).send("Failed to save settings.");
+    }
+});
+
+app.get('/api/search/:id', async (req, res) => {
+    const entry = await Blacklist.findOne({ discordId: req.params.id });
+    if (entry) {
+        res.json({ blacklisted: true, reason: entry.reason, date: entry.dateAdded });
+    } else {
+        res.json({ blacklisted: false });
     }
 });
 

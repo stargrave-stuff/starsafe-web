@@ -6,6 +6,7 @@
     <title>StarSafe | Dashboard</title>
     <link rel="stylesheet" href="/css/root.css">
     <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/mobile.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -20,7 +21,6 @@
     <nav class="nav-menu">
         <a href="/dashboard" class="nav-item active"><i class="fas fa-house"></i> Overview</a>
         <a href="/servers" class="nav-item"><i class="fas fa-server"></i> Servers</a>
-        <a href="/blacklist" class="nav-item"><i class="fas fa-user-slash"></i> Blacklists</a>
     </nav>
 
     <div class="user-footer">
@@ -38,6 +38,9 @@
 
         <main class="main-content">
             <header class="header-section">
+                <button class="mobile-menu-toggle" onclick="toggleMenu()">
+                <i class="fas fa-bars"></i>
+                </button>
                 <h1>Welcome, <%= user.username %></h1>
                 <p>Status: <span class="status-indicator">● Active</span></p>
             </header>
@@ -55,8 +58,29 @@
                 </div>
             </section>
             
+<section class="search-section">
+    <h2>Search User Blacklist Status</h2>
+    <div class="google-search-wrapper">
+        <div class="search-bar">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="searchInput" placeholder="Enter Discord User ID" autocomplete="off">
+        </div>
+        <div class="search-buttons">
+            <button onclick="handleSearch()" class="google-btn">Blacklist Search</button>
+        </div>
+    </div>
+</section>
+
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeModal()">&times;</span>
+        <div id="modalBody">
+            </div>
+    </div>
+</div>
             </main>
     </div>
-
+<div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleMenu()"></div>
+<script src="/scripts/main.js"></script>
 </body>
 </html>

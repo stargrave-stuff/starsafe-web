@@ -11,3 +11,6 @@ package-lock.json
 
 # VSC Configurations
 .vscode/
+
+# Hide this file **IMPORTANT!!**
+.gitignore

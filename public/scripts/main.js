@@ -1,113 +1,80 @@
-// Wait until the entire HTML document is loaded before trying to access the elements.
-document.addEventListener('DOMContentLoaded', function() {
-    
-    // 1. Get references to the necessary HTML elements
-    const themeToggleBtn = document.getElementById('theme-toggle');
-    const bodyElement = document.body;
-    const themeIcon = document.getElementById('theme-icon'); 
-    
-    // 🛑 CRITICAL CHECK: Ensure the button exists before attaching the listener
-    if (!themeToggleBtn || !themeIcon) {
-        console.error("Theme toggle button or icon not found. Check your HTML IDs.");
-        return; 
-    }
+async function handleSearch() {
+    const userId = document.getElementById('searchInput').value;
+    const modal = document.getElementById('searchModal');
+    const modalBody = document.getElementById('modalBody');
 
-    // Define the sequence of themes to cycle through
-    const themeSequence = ['dark', 'light', 'StarSafe'];
+    if (!userId) return alert("Please enter a User ID");
 
-    /**
-     * Function to set the icon based on the current theme
-     * @param {string} theme - The current theme name ('dark', 'light', or 'StarSafe').
-     */
-    function updateThemeIcon(theme) {
+    try {
+        const response = await fetch(`/api/search/${userId}`);
+        const data = await response.json();
+
+        modal.style.display = "block";
         
-        // --- CRITICAL FIX: Remove previous icons ---
-        themeIcon.classList.remove('fa-moon', 'fa-sun', 'fa-star');
-        
-        // Add the base class for Font Awesome icons
-        themeIcon.classList.add('fa-solid'); 
-        
-        // Add the new icon class
-        if (theme === 'dark') {
-            themeIcon.classList.add('fa-moon'); 
-        } else if (theme === 'light') {
-            themeIcon.classList.add('fa-sun'); 
-        } else if (theme === 'StarSafe') {
-            // Star icon for the StarSafe theme
-            themeIcon.classList.add('fa-star'); 
+        if (data.blacklisted) {
+            modalBody.innerHTML = `
+                <div class="result-card">
+                    <h3 class="status-blacklisted">⚠️ USER BLACKLISTED</h3>
+                    <div class="result-id-badge">${userId}</div>
+                    <p><strong>Reason:</strong> ${data.reason}</p>
+                    <p><strong>Date:</strong> ${new Date(data.date).toLocaleDateString()}</p>
+                </div>
+            `;
+        } else {
+            modalBody.innerHTML = `
+                <div class="result-card">
+                    <h3 class="status-clean">✅ USER CLEAN</h3>
+                    <div class="result-id-badge">${userId}</div>
+                    <p>This user is not in the global blacklist database.</p>
+                </div>
+            `;
         }
+    } catch (err) {
+        console.error("Search failed:", err);
     }
+}
+
+function closeModal() {
+    document.getElementById('searchModal').style.display = "none";
+}
+
+// Close if they click outside the box
+window.onclick = function(event) {
+    const modal = document.getElementById('searchModal');
+    if (event.target == modal) closeModal();
+}
+
+// Mobile menu toggle
+function toggleMenu() {
+    const sidebar = document.querySelector('.sidebar');
+    sidebar.classList.toggle('active');
+}
+
+// Optional: Close menu if user clicks outside of it
+document.addEventListener('click', function(event) {
+    const sidebar = document.querySelector('.sidebar');
+    const toggleBtn = document.querySelector('.mobile-menu-toggle');
     
-    /**
-     * Function to set the data-theme attribute on the body and save to localStorage.
-     * @param {string} themeName - The name of the theme to apply.
-     */
-    function applyAndSaveTheme(themeName) {
-        // 1. Apply the theme to the body
-        bodyElement.setAttribute('data-theme', themeName);
-        
-        // 2. SAVE the theme preference to the browser's local storage
-        localStorage.setItem('theme', themeName);
-        
-        // 3. Update the button icon
-        updateThemeIcon(themeName);
-        console.log(`Theme switched to and saved as ${themeName}`);
+    if (!sidebar.contains(event.target) && !toggleBtn.contains(event.target) && sidebar.classList.contains('active')) {
+        sidebar.classList.remove('active');
     }
+});
 
-
-    // 3. Add an event listener to the button
-    themeToggleBtn.addEventListener('click', function() {
-        // Read the currently active theme (uses the fallback logic if attribute is missing)
-        const currentTheme = bodyElement.getAttribute('data-theme') || themeSequence[0];
-        
-        // Find the index of the current theme
-        const currentIndex = themeSequence.indexOf(currentTheme);
-        
-        // Calculate the index of the next theme (cycles back to 0 if it hits the end)
-        const nextIndex = (currentIndex + 1) % themeSequence.length;
-        
-        const newTheme = themeSequence[nextIndex];
-        
-        // Apply the new theme and save it
-        applyAndSaveTheme(newTheme);
-    });
-
-
-    // --- 4. INITIALIZATION LOGIC (The Persistence Part) ---
+// Overlay functionality
+function toggleMenu() {
+    const sidebar = document.querySelector('.sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
     
-    // Check if a theme is saved in local storage
-    const savedTheme = localStorage.getItem('theme');
-
-    if (savedTheme) {
-        // If a theme is found, apply it immediately on load
-        applyAndSaveTheme(savedTheme);
+    sidebar.classList.toggle('active');
+    
+    // Toggle the overlay visibility
+    if (sidebar.classList.contains('active')) {
+        overlay.style.display = 'block';
+        // Small timeout to allow the opacity transition to trigger
+        setTimeout(() => { overlay.style.opacity = '1'; }, 10);
     } else {
-        // If no theme is saved, apply the default theme from the body attribute (or 'dark')
-        applyAndSaveTheme(bodyElement.getAttribute('data-theme') || 'dark');
+        overlay.style.opacity = '0';
+        // Wait for transition to finish before hiding
+        setTimeout(() => { overlay.style.display = 'none'; }, 300);
     }
-
-});
-
-// --- Mobile Menu Logic ---
-const openBtn = document.getElementById('menu-open-btn');
-const closeBtn = document.getElementById('menu-close-btn');
-const mobileMenu = document.getElementById('mobile-menu');
-const activeClass = 'is-active'; 
-openBtn.addEventListener('click', function() {
-    mobileMenu.classList.add(activeClass);
-    openBtn.style.display = 'none'; 
-});
-
-closeBtn.addEventListener('click', function() {
-    mobileMenu.classList.remove(activeClass);
-    openBtn.style.display = 'block'; 
-});
-
-// Optional: Close the menu if a link is clicked
-// mobileMenu.querySelectorAll('a').forEach(link => {
-//    link.addEventListener('click', function() {
-//        mobileMenu.classList.remove(activeClass);
-//        openBtn.style.display = 'block'; 
-//    });
-//});
-
+}
