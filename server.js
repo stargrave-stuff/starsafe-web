@@ -4,6 +4,14 @@ const fetch = require('node-fetch');
 const path = require('path');
 const mongoose = require('mongoose');
 require('dotenv').config(); 
+const { 
+    Client, 
+    GatewayIntentBits, 
+    EmbedBuilder, 
+    ActionRowBuilder, 
+    ButtonBuilder, 
+    ButtonStyle 
+} = require('discord.js');
 
 const app = express();
 const PORT = process.env.PORT || 3001; 
@@ -19,6 +27,9 @@ const GuildSettings = require('./models/GuildSettings');
 mongoose.connect(DB_URI)
     .then(() => console.log('Successfully connected to MongoDB!'))
     .catch(err => console.error('MongoDB connection error:', err));
+
+const bot = new Client({ intents: [GatewayIntentBits.Guilds] });
+bot.login(process.env.DISCORD_BOT_TOKEN);
 
 // ====================================================
 // DISCORD & ENVIRONMENT CONSTANTS
@@ -74,7 +85,7 @@ function checkAdmin(req, res, next) {
 }
 
 // ====================================================
-// WEBHOOK UTILITIES
+// WEBHOOK UTILITIES (Shows as StarSafe)
 // ====================================================
 //async function sendWebhookAlert(userId, reason, adminTag) {
 //    try {
@@ -100,7 +111,7 @@ function checkAdmin(req, res, next) {
 //                method: 'POST',
 //                headers: { 'Content-Type': 'application/json' },
 //                body: JSON.stringify({
-//                    username: "StarSafe Alerts",
+//                    username: "StarSafe",
 //                    embeds: [embed]
 //                })
 //            }).catch(err => console.error(`Webhook failed for guild ${setting.guildId}`));
@@ -110,40 +121,43 @@ function checkAdmin(req, res, next) {
 //    }
 //}
 
-// ====================================================
-// GLOBAL WEBHOOK LOGGING (TEMPORARY FUNCTION)
-// ====================================================
-async function sendGlobalWebhook(userId, reason, adminTag) {
-    const webhookUrl = process.env.ADMIN_LOG_WEBHOOK;
-    
-    if (!webhookUrl) {
-        console.warn("⚠️ ADMIN_LOG_WEBHOOK is not defined in .env");
-        return;
-    }
-
-    const embed = {
-        title: "🚨 Global Blacklist Action",
-        color: 0x5865F2, // Blurple
-        fields: [
-            { name: "Target User", value: `\`${userId}\``, inline: true },
-            { name: "Admin", value: adminTag, inline: true },
-            { name: "Reason", value: reason || "No reason provided" }
-        ],
-        footer: { text: "StarSafe Central Intelligence" },
-        timestamp: new Date()
-    };
+// ================================================================
+// GLOBAL WEBHOOK LOGGING (Shows as StarSafe) (TEMPORARY FUNCTION)
+// ================================================================
+async function sendGlobalAlert(userId, reason, adminTag) {
+    const channelId = process.env.ADMIN_LOG_CHANNEL_ID; // Add this ID to your .env
+    const starSafeLogo = "https://i.postimg.cc/Hs6kqdyY/raw.png";
 
     try {
-        await fetch(webhookUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                username: "StarSafe System",
-                embeds: [embed]
-            })
+        const channel = await bot.channels.fetch(channelId);
+        if (!channel) return console.error("Could not find log channel.");
+
+        // 1. Create the Embed
+        const embed = new EmbedBuilder()
+            .setTitle("🚨 New Blacklist — View Website")
+            .setColor(0xff0000)
+            .setThumbnail(starSafeLogo)
+            .setDescription("A new user has been added to the blacklist. To view the reason, the user, and more, view the website.")
+            .setFooter({ text: "StarSafe Security System • Take appropriate action" })
+            .setTimestamp();
+
+        // 2. Create the Button
+        const row = new ActionRowBuilder().addComponents(
+            new ButtonBuilder()
+                .setLabel('View Website')
+                .setURL("https://starsafe.stargrave.xyz")
+                .setStyle(ButtonStyle.Link)
+        );
+
+        // 3. Send the message
+        await channel.send({
+            content: "<@&1414606389455884359>🚨 New Blacklist Alert",
+            embeds: [embed],
+            components: [row]
         });
+
     } catch (err) {
-        console.error("Failed to send global webhook:", err);
+        console.error("Error sending bot alert:", err);
     }
 }
 
@@ -326,7 +340,7 @@ app.post('/api/blacklist/add', checkAuth, checkAdmin, async (req, res) => {
 //        await sendWebhookAlert(discordId, reason || "No reason provided", req.session.user.username);
 
         // Trigger the Global Webhook Log (Temporary)
-        await sendGlobalWebhook(discordId, reason, req.session.user.username);
+        await sendGlobalAlert(discordId, reason, req.session.user.username);
 
         res.redirect('/blacklist-manage?success=added');
     } catch (error) {
