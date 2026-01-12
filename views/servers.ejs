@@ -2,10 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>StarSafe | My Servers</title>
     <link rel="stylesheet" href="/css/root.css">
     <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/mobile.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -33,6 +34,9 @@
 
         <main class="main-content">
             <header class="header-section">
+                <button class="mobile-menu-toggle" onclick="toggleMenu()">
+                <i class="fas fa-bars"></i>
+                </button>
                 <h1>My Servers</h1>
                 <p>Manage StarSafe protection across your guilds.</p>
             </header>
@@ -67,6 +71,7 @@
 </section>
         </main>
     </div>
-
+<div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleMenu()"></div>
+<script src="/scripts/main.js"></script>
 </body>
 </html>

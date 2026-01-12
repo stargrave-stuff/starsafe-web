@@ -1,4 +1,30 @@
 @media (max-width: 768px) {
+    /* Prevent horizontal scrolling globally */
+    html, body {
+        overflow-x: hidden;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Force the main container to the left and lock width */
+    .main-content {
+        display: block; /* Overrides any flex centering we added earlier */
+        width: 100vw;
+        padding: 15px;
+        box-sizing: border-box; /* Ensures padding doesn't add to width */
+        text-align: left;
+    }
+
+    /* Ensure cards/stats don't exceed screen width */
+    .stats-grid, .card, .search-section {
+        max-width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
+
+@media (max-width: 768px) {
     /* Position the hamburger on the RIGHT */
     .mobile-menu-toggle {
         display: block;
@@ -83,3 +109,28 @@
     }
 }
 
+@media (max-width: 768px) {
+    /* 1. Prevent the container from being wider than the screen */
+    .dashboard-container, .main-content {
+        width: 100% !important;
+        max-width: 100vw !important;
+        margin: 0 !important;
+        padding: 10px !important;
+        overflow-x: hidden;
+    }
+
+    /* 2. Force stats cards to stack and stay left */
+    .stats-grid {
+        display: flex;
+        flex-direction: column; /* Stack them vertically */
+        align-items: flex-start; /* Align to the left */
+        width: 100%;
+        gap: 15px;
+    }
+
+    /* 3. Ensure the cards don't have a fixed large width */
+    .card {
+        width: calc(100% - 20px) !important;
+        margin-left: 0 !important;
+    }
+}
